@@ -1,0 +1,66 @@
+<project name="Analyzer" basedir="." default="compile">
+
+  <property name="src.dir"     value="src"/>
+  <property name="build.dir"   value="bin"/>
+  <property name="cfg.dir"   value="cfg"/>
+
+  <path id="class.path">
+  <fileset dir="lib">
+    <include name="**/*.jar" />
+  </fileset>
+  <fileset dir="${java.home}/lib/">
+    <include name="**/*.jar" />
+  </fileset>
+  <fileset dir="${java.home}/lib/ext/">
+    <include name="**/*.jar" />
+  </fileset>
+</path>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${build.dir}"/>
+        <javac destdir="${build.dir}" includeantruntime="true">
+          <src path="${src.dir}"/>
+          <classpath refid="class.path" />
+        </javac>
+        <copy todir="${build.dir}">
+          <fileset dir="${cfg.dir}"
+             includes="*.properties" />
+        </copy>
+    </target>
+
+    <target name="download" depends="compile">
+      <java classname="DBDownloader">
+        <arg value="${host}"/>
+        <arg value="${dir}"/>
+        <classpath refid="class.path" />
+        <classpath>
+          <pathelement location="bin/" />
+        </classpath>
+      </java>
+    </target>
+
+    <target name="checkAll" depends="compile">
+      <java classname="CheckAll">
+        <arg value="${dir}"/>
+        <classpath refid="class.path" />
+        <classpath>
+          <pathelement location="bin/" />
+        </classpath>
+      </java>
+    </target>
+
+    <target name="gui" depends="compile">
+      <java classname="CryptorViewer">
+        <arg value="${dir}"/>
+        <classpath refid="class.path" />
+        <classpath>
+          <pathelement location="bin/" />
+        </classpath>
+      </java>
+    </target>
+
+</project>
