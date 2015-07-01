@@ -28,7 +28,7 @@ Waits until all data is written to the database and downloads the information fr
 
 ###checkAll
 
-    ant checkAll -dDir={directory}
+    ant checkAll -Ddir={directory}
 
 Checks for all properties listed above. This can take a while because we have to glue together all input and output to the crypto functions etc. (probably there are a lot of calls to hash functions and those get searched too).
 
