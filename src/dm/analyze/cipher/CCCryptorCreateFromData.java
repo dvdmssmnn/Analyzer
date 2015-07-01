@@ -30,25 +30,24 @@ import org.apache.log4j.Logger;
 import dm.data.Call;
 import dm.db.DBHelper;
 
-public class CCCryptorCreateWithMode extends CommonCryptor {
+public class CCCryptorCreateFromData extends CommonCryptor {
 
 	private static final Logger log = Logger
-			.getLogger(CCCryptorCreateWithMode.class);
+			.getLogger(CCCryptorCreateFromData.class);
 
-	private static Set<CCCryptorCreateWithMode> ciphers = null;
+	private static Set<CCCryptorCreateFromData> ciphers = null;
 
-	public static synchronized Set<CCCryptorCreateWithMode> getCipher() {
+	public static synchronized Set<CCCryptorCreateFromData> getCipher() {
 		if (ciphers == null) {
-			ciphers = new HashSet<CCCryptorCreateWithMode>();
+			ciphers = new HashSet<CCCryptorCreateFromData>();
 			try {
 				DBHelper connection = DBHelper.getReadableConnections();
 				List<Call> calls = connection.findCall(null, "CommonCrypto",
-						"CCCryptorCreateWithMode", null, null, null, null);
-				log.debug(String.format(
-						"Found %d calls to 'CCCryptorCreateWithMode'",
+						"CCCryptorCreateFromData", null, null, null, null);
+				log.debug(String.format("Found %d calls to 'CCCryptorCreate'",
 						calls.size()));
 				for (Call call : calls) {
-					CCCryptorCreateWithMode cipher = new CCCryptorCreateWithMode(
+					CCCryptorCreateFromData cipher = new CCCryptorCreateFromData(
 							call);
 					if (!cipher.isSSLCipher()) {
 						ciphers.add(cipher);
@@ -64,14 +63,16 @@ public class CCCryptorCreateWithMode extends CommonCryptor {
 		return ciphers;
 	}
 
-	public CCCryptorCreateWithMode(Call call) {
-		super(call.getID(), call.getCallerID(), Integer.valueOf(call
-				.getParameter().get(0).getValue()), Integer.valueOf(call
-				.getParameter().get(2).getValue()), Integer.valueOf(call
-				.getParameter().get(1).getValue()), call.getParameter().get(4),
-				call.getParameter().get(5), call.getParameter().get(11)
+	public CCCryptorCreateFromData(Call call) {
+		super(
+				call.getID(),
+				call.getCallerID(),
+				Integer.valueOf(call.getParameter().get(0).getValue()),
+				Integer.valueOf(call.getParameter().get(1).getValue()),
+				(Integer.valueOf(call.getParameter().get(2).getValue())
+						.intValue() & kCCOptionECBMode) != 0 ? CCMode.kCCModeECB.numVal
+						: CCMode.kCCModeCBC.numVal, call.getParameter().get(5),
+				call.getParameter().get(3), call.getParameter().get(8)
 						.getValue());
-
 	}
-
 }

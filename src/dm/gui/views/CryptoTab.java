@@ -99,7 +99,9 @@ public class CryptoTab extends Tab {
 		ObservableList<SymmetricCipher> ciphers = FXCollections
 				.observableArrayList();
 		for (SymmetricCipher cipher : SymmetricCipher.getCiphers()) {
-			ciphers.add(cipher);
+			if (cipher.getWarnings().size() > 0) {
+				ciphers.add(cipher);
+			}
 		}
 		this.cipherListView.setItems(ciphers);
 

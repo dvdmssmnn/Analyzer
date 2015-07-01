@@ -46,8 +46,10 @@ public abstract class SymmetricCipher {
 		if (ciphers == null) {
 			ciphers = new HashSet<SymmetricCipher>();
 
-			// ciphers.addAll(CCCryptorCreate.getCipher());
 			ciphers.addAll(CCCryptorCreateWithMode.getCipher());
+			ciphers.addAll(CCCryptorCreate.getCipher());
+			ciphers.addAll(CCCrypt.getCipher());
+			ciphers.addAll(CCCryptorCreateFromData.getCipher());
 
 			new Thread(new Runnable() {
 

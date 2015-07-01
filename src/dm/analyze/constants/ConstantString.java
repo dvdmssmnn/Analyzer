@@ -39,12 +39,14 @@ public class ConstantString extends Constant {
 			List<Call> constantParams = connection.findCall(null, null, null,
 					null, "__NSCFConstantString", null, null);
 			for (Call c : constantParams) {
-				if (c.getReturnType().equals("__NSCFConstantString")) {
+				if (c.getReturnType() != null
+						&& c.getReturnType().equals("__NSCFConstantString")) {
 					constants.add(new ConstantString(c.getReturnDescription()));
 				}
 
 				for (Parameter p : c.getParameter()) {
-					if (p.getType().equals("__NSCFConstantString")) {
+					if (p.getType() != null
+							&& p.getType().equals("__NSCFConstantString")) {
 						constants.add(new ConstantString(p.getDescription()));
 					}
 				}
